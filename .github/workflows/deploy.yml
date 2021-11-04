@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Dokku
-        uses: dokku/github-action@v1.0.1
+        uses: dokku/github-action@master
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           git_remote_url: "ssh://dokku@stfurequiem.com:3582/backup"
