@@ -37,5 +37,5 @@ async def backup_loop():
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    asyncio.ensure_future(backup_loop(), loop=loop)
     loop.run_forever()
+    task = loop.create_task(backup_loop())
