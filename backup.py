@@ -10,9 +10,10 @@ TABLES = ["global", "ban", "gang", "servers", "users", "webhook"]
 
 
 async def backup_loop():
-    try:
-        today = datetime.datetime.date(datetime.datetime.min)
-        while True:
+    print("Started backup loop...")
+    today = datetime.datetime.date(datetime.datetime.min)
+    while True:
+        try:
             # check if the backup has been run today
             if today != datetime.datetime.date(datetime.datetime.now()):
                 today = datetime.datetime.date(datetime.datetime.now())
@@ -31,8 +32,8 @@ async def backup_loop():
                 # close connection
                 await connection.close()
                 print(f"{str(today)} backup: done")
-    except Exception as exc:
-        print(exc)
+        except Exception as exc:
+            print(exc)
 
 
 if __name__ == "__main__":
