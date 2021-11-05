@@ -34,7 +34,7 @@ async def backup_loop():
                         table, output=f"{str(today)}-{table}.csv", format="csv"
                     )
                     # compress backup gzip file
-                    with gzip.open(f"{PATH}{str(today)}-{table}.csv.gz", "wb") as f:
+                    with gzip.open(f"/{PATH}{str(today)}-{table}.csv.gz", "wb") as f:
                         f.write(result)
                     print(f"Backed up {table}")
                 print("closing the connection")
