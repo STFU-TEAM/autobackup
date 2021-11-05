@@ -5,6 +5,7 @@ import asyncio
 import os
 import uvloop
 import csv
+import pandas as pd
 
 URL = os.environ["DATABASE_URL"]
 PATH = os.environ["SAVEPATH"]
@@ -36,10 +37,11 @@ async def backup_loop():
                     )
                     # convert into a csv
                     csv_file = csv.reader(result.splitlines())
-
+                    dataframe = pd.DataFrame(csv_file)
                     # compress backup gzip file
-                    with gzip.open(f"/{PATH}{str(today)}-{table}.csv.gz", "wb") as f:
-                        f.write(csv_file)
+                    dataframe.to_csv(
+                        f"/{PATH}{str(today)}-{table}.csv.zip", compression="zip"
+                    )
                     print(f"Backed up {table}")
                 print("closing the connection")
                 # close connection
