@@ -4,7 +4,7 @@ import datetime
 import asyncio
 import os
 
-URL = os.environ["URL"]
+URL = os.environ["DATABASE_URL"]
 PATH = os.environ["PATH"]
 TABLES = ["global", "ban", "gang", "servers", "users", "webhook"]
 
