@@ -4,6 +4,7 @@ import datetime
 import asyncio
 import os
 import uvloop
+import csv
 
 URL = os.environ["DATABASE_URL"]
 PATH = os.environ["SAVEPATH"]
@@ -30,12 +31,15 @@ async def backup_loop():
                 # database
                 for table in TABLES:
                     print(f"Backing up {table} ...")
-                    result = await connection.copy_from_table(
+                    result: str = await connection.copy_from_table(
                         table, output=f"{str(today)}-{table}.csv", format="csv"
                     )
+                    # convert into a csv
+                    csv_file = csv.reader(result.splitlines())
+
                     # compress backup gzip file
                     with gzip.open(f"/{PATH}{str(today)}-{table}.csv.gz", "wb") as f:
-                        f.write(result)
+                        f.write(csv_file)
                     print(f"Backed up {table}")
                 print("closing the connection")
                 # close connection
