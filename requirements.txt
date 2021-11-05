@@ -2,3 +2,4 @@ asyncio
 datetime
 asyncpg
 uvloop
+pandas
