@@ -1,3 +1,4 @@
 asyncio
 datetime
 asyncpg
+uvloop
