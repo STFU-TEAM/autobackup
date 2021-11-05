@@ -32,11 +32,11 @@ async def backup_loop():
                 # close connection
                 await connection.close()
                 print(f"{str(today)} backup: done")
+            await asyncio.sleep(60 * 60)
         except Exception as exc:
             print(exc)
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_forever()
-    task = loop.create_task(backup_loop())
+    print("started script")
+    asyncio.run(backup_loop())
