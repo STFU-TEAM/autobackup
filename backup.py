@@ -5,7 +5,7 @@ import asyncio
 import os
 
 URL = os.environ["DATABASE_URL"]
-PATH = os.environ["PATH"]
+PATH = os.environ["SAVEPATH"]
 TABLES = ["global", "ban", "gang", "servers", "users", "webhook"]
 
 
