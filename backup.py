@@ -14,21 +14,28 @@ async def backup_loop():
     today = datetime.datetime.date(datetime.datetime.min)
     while True:
         try:
+            print(
+                "Date check:", today != datetime.datetime.date(datetime.datetime.now())
+            )
             # check if the backup has been run today
             if today != datetime.datetime.date(datetime.datetime.now()):
                 today = datetime.datetime.date(datetime.datetime.now())
                 # connect to the database
+                print("Connection to the database")
                 connection: asyncpg.Connection = await asyncpg.connect(
                     URL, ssl="require"
                 )
                 # database
                 for table in TABLES:
+                    print(f"Backing up {table} ...")
                     result = await connection.copy_from_table(
                         table, output=f"{str(today)}-{table}.csv", format="csv"
                     )
                     # compress backup gzip file
                     with gzip.open(f"{PATH}{str(today)}-{table}.csv.gz", "wb") as f:
                         f.write(result)
+                    print(f"Backed up {table}")
+                print("closing the connection")
                 # close connection
                 await connection.close()
                 print(f"{str(today)} backup: done")
