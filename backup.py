@@ -36,7 +36,7 @@ async def backup_loop():
                         table, output=f"{str(today)}-{table}.csv", format="csv"
                     )
                     # convert into a csv
-                    csv_file = csv.reader(result.splitlines())
+                    csv_file = csv.DictReader(result.splitlines())
                     dataframe = pd.DataFrame(csv_file)
                     # compress backup gzip file
                     dataframe.to_csv(
