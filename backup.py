@@ -3,6 +3,7 @@ import gzip
 import datetime
 import asyncio
 import os
+import uvloop
 
 URL = os.environ["DATABASE_URL"]
 PATH = os.environ["SAVEPATH"]
@@ -25,6 +26,7 @@ async def backup_loop():
                 connection: asyncpg.Connection = await asyncpg.connect(
                     URL, ssl="require"
                 )
+                print("Connected to the database")
                 # database
                 for table in TABLES:
                     print(f"Backing up {table} ...")
@@ -46,4 +48,5 @@ async def backup_loop():
 
 if __name__ == "__main__":
     print("started script")
+    uvloop.install()
     asyncio.run(backup_loop())
