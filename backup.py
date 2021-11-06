@@ -23,7 +23,9 @@ async def backup_loop():
             if today != datetime.datetime.date(datetime.datetime.now()):
                 today = datetime.datetime.date(datetime.datetime.now())
                 # create the zipfile
-                zip = zipfile.ZipFile(f"/{PATH}{str(today)}.zip", "w")
+                zip = zipfile.ZipFile(
+                    f"/{PATH}{str(today)}.zip", "w", zipfile.ZIP_DEFLATED
+                )
                 # connect to the database
                 print("Connection to the database")
                 connection: asyncpg.Connection = await asyncpg.connect(
@@ -47,6 +49,7 @@ async def backup_loop():
                     for file in files:
                         zip.write(os.path.join(root, file))
                 zip.close()
+                print("deleting temp file")
                 shutil.rmtree("temp")
                 print(f"{str(today)} backup: done")
             # sleep until so the script is not reasource intensive
