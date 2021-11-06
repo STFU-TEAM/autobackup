@@ -1,11 +1,9 @@
 import asyncpg
-import gzip
+import zipfile
 import datetime
 import asyncio
 import os
 import uvloop
-import csv
-import pandas as pd
 
 URL = os.environ["DATABASE_URL"]
 PATH = os.environ["SAVEPATH"]
@@ -23,6 +21,8 @@ async def backup_loop():
             # check if the backup has been run today
             if today != datetime.datetime.date(datetime.datetime.now()):
                 today = datetime.datetime.date(datetime.datetime.now())
+                # create the zipfile
+                zip = zipfile.ZipFile(f"/{PATH}{str(today)}.zip")
                 # connect to the database
                 print("Connection to the database")
                 connection: asyncpg.Connection = await asyncpg.connect(
@@ -30,24 +30,24 @@ async def backup_loop():
                 )
                 print("Connected to the database")
                 # database
+                print("Created temp folder")
                 for table in TABLES:
-                    print(f"Backing up {table} ...")
-                    result = await connection.copy_from_table(
-                        table, output=f"{str(today)}-{table}.csv", format="csv"
+                    print(f"fetching up {table} ...")
+                    await connection.copy_from_table(
+                        table, output=f"/temp/{str(today)}-{table}.csv", format="csv"
                     )
-                    print(type(result))
-                    # convert into a csv
-                    csv_file = csv.DictReader(result.splitlines())
-                    dataframe = pd.DataFrame(csv_file)
-                    # compress backup gzip file
-                    dataframe.to_csv(
-                        f"/{PATH}{str(today)}-{table}.csv.zip", compression="zip"
-                    )
-                    print(f"Backed up {table}")
                 print("closing the connection")
                 # close connection
                 await connection.close()
+                # write to zip
+                print("writing to zip")
+                for root, dirs, files in os.walk("/temp"):
+                    for file in files:
+                        zip.write(os.path.join(root, file))
+                print("deleting temp folder")
+                os.rmdir("/temp")
                 print(f"{str(today)} backup: done")
+            # sleep until so the script is not reasource intensive
             await asyncio.sleep(60 * 60)
         except Exception as exc:
             print(exc)
