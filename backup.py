@@ -32,9 +32,10 @@ async def backup_loop():
                 # database
                 for table in TABLES:
                     print(f"Backing up {table} ...")
-                    result: str = await connection.copy_from_table(
+                    result = await connection.copy_from_table(
                         table, output=f"{str(today)}-{table}.csv", format="csv"
                     )
+                    print(type(result))
                     # convert into a csv
                     csv_file = csv.DictReader(result.splitlines())
                     dataframe = pd.DataFrame(csv_file)
