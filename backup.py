@@ -24,7 +24,7 @@ async def backup_loop():
                 today = datetime.datetime.date(datetime.datetime.now())
                 # create the zipfile
                 zip = zipfile.ZipFile(
-                    f"/{PATH}{str(today)}.zip", "w", zipfile.ZIP_DEFLATED
+                    f"/{PATH}{str(today)}.zip", "w", zipfile.ZIP_BZIP2
                 )
                 # connect to the database
                 print("Connection to the database")
