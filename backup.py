@@ -2,6 +2,7 @@ import asyncpg
 import zipfile
 import datetime
 import asyncio
+import shutil
 import os
 import uvloop
 
@@ -46,7 +47,7 @@ async def backup_loop():
                     for file in files:
                         zip.write(os.path.join(root, file))
                 zip.close()
-                os.rmdir("temp")
+                shutil.rmtree("temp")
                 print(f"{str(today)} backup: done")
             # sleep until so the script is not reasource intensive
             await asyncio.sleep(60 * 60)
