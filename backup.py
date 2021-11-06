@@ -35,14 +35,14 @@ async def backup_loop():
                 for table in TABLES:
                     print(f"fetching up {table} ...")
                     await connection.copy_from_table(
-                        table, output=f"/temp/{str(today)}-{table}.csv", format="csv"
+                        table, output=f"temp/{str(today)}-{table}.csv", format="csv"
                     )
                 print("closing the connection")
                 # close connection
                 await connection.close()
                 # write to zip
                 print("writing to zip file")
-                for root, dirs, files in os.walk("/temp"):
+                for root, dirs, files in os.walk("temp"):
                     for file in files:
                         zip.write(os.path.join(root, file))
                 zip.close()
