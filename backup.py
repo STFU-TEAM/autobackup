@@ -31,8 +31,7 @@ async def backup_loop():
                 print("Connected to the database")
                 # database
                 print("Created temp folder")
-                f = open("/temp/myfile.txt", "x")
-                f.close()
+                os.mkdir("temp")
                 for table in TABLES:
                     print(f"fetching up {table} ...")
                     await connection.copy_from_table(
@@ -47,7 +46,6 @@ async def backup_loop():
                     for file in files:
                         zip.write(os.path.join(root, file))
                 zip.close()
-                print("deleting temp folder")
                 os.rmdir("temp")
                 print(f"{str(today)} backup: done")
             # sleep until so the script is not reasource intensive
